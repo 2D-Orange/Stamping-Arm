@@ -14,7 +14,12 @@ slprj/
 Thumbs.db
 .vscode/
 .idea/
+.agents/
+.codex/
 
 # Local scratch files
 tmp/
 temp/
+
+# Local planning/reference notes
+docs/
