@@ -16,8 +16,13 @@ params.q4_press = 0.07;
 % Use -1 if the actual assembly places it radially inward.
 params.axisSign = 1;
 
-params.safeStampZ = 0.12;
+params.safeStampZ = 0.08;
 params.tolerance = 1e-10;
+
+% Trajectory planning settings.
+% trajSegmentTime can be a scalar or a vector with one value per segment.
+params.trajSegmentTime = 2.0;
+params.trajDt = 0.02;
 
 % Task points for inverse kinematics.
 % Format of each target row: [x, y, z, press]
@@ -29,15 +34,21 @@ params.taskNames = {
     'home'
     'ink_above'
     'ink_press'
+    'ink_above'
     'paper_above'
     'paper_press'
+    'paper_above'
+    'home'
     };
 
 params.taskTargets = [
     0.28,  0.00, 0.18, 0
-    0.20,  0.15, 0.12, 0
-    0.20,  0.15, 0.02, 1
-    0.25, -0.15, 0.12, 0
-    0.25, -0.15, 0.02, 1
+    0.30,  0.20, 0.08, 0
+    0.30,  0.20, 0.02, 1
+    0.30,  0.20, 0.08, 0
+    0.30, -0.20, 0.06, 0
+    0.30, -0.20, 0.00, 1
+    0.30, -0.20, 0.06, 0
+    0.28,  0.00, 0.18, 0
     ];
 end
