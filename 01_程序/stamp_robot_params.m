@@ -18,4 +18,26 @@ params.axisSign = 1;
 
 params.safeStampZ = 0.12;
 params.tolerance = 1e-10;
+
+% Task points for inverse kinematics.
+% Format of each target row: [x, y, z, press]
+% z is the desired stamp working-face height.
+% press = 0 means q4_min, press = 1 means q4_press.
+% You may also put a direct q4 value in meters, such as 0.035.
+% You can add, delete, or reorder rows here; keep taskNames the same length.
+params.taskNames = {
+    'home'
+    'ink_above'
+    'ink_press'
+    'paper_above'
+    'paper_press'
+    };
+
+params.taskTargets = [
+    0.28,  0.00, 0.18, 0
+    0.20,  0.15, 0.12, 0
+    0.20,  0.15, 0.02, 1
+    0.25, -0.15, 0.12, 0
+    0.25, -0.15, 0.02, 1
+    ];
 end

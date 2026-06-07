@@ -4,22 +4,25 @@ clear; clc;
 
 params = stamp_robot_params();
 
-taskName = {
-    'home'
-    'ink_above'
-    'ink_press'
-    'paper_above'
-    'paper_press'
-    };
+taskName = params.taskNames(:);
+targets = params.taskTargets;
 
-% [x, y, z, press], where z is the stamp working-face target height.
-targets = [
-    0.28,  0.00, 0.18, 0
-    0.20,  0.15, 0.12, 0
-    0.20,  0.15, 0.02, 1
-    0.25, -0.15, 0.12, 0
-    0.25, -0.15, 0.02, 1
-    ];
+if size(targets, 2) ~= 4
+    error('run_kinematics_solution:InvalidTaskTargets', ...
+        'params.taskTargets must be an N-by-4 matrix: [x y z press].');
+end
+
+if isempty(targets)
+    error('run_kinematics_solution:EmptyTaskTargets', ...
+        'params.taskTargets must contain at least one task point.');
+end
+
+if numel(taskName) ~= size(targets, 1)
+    error('run_kinematics_solution:TaskSizeMismatch', ...
+        ['params.taskNames contains %d names, but params.taskTargets ', ...
+        'contains %d target rows. These counts must match.'], ...
+        numel(taskName), size(targets, 1));
+end
 
 nTask = size(targets, 1);
 Q = zeros(nTask, 4);

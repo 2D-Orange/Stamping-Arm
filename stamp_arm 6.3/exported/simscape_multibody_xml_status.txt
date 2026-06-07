@@ -1,0 +1,3 @@
+Simscape Multibody XML was not generated.
+Reason: smimport exists in MATLAB, but the SOLIDWORKS export add-in entry point smlink_linksw / Simscape Multibody Link was not found on this machine.
+Install/register Simscape Multibody Link, enable the add-in in SOLIDWORKS, then use its Export command to create a MATLAB smimport-compatible XML.
