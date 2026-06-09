@@ -66,12 +66,24 @@ outputDir = fullfile(rootDir, names{1});
 end
 
 function [importUrdfFile, sourceUrdfFile, packageDir] = prepare_solidworks_urdf(rootDir)
-urdfRoot = fullfile(rootDir, 'urdf');
-candidates = dir(fullfile(urdfRoot, '*', 'urdf', '*.urdf'));
+urdfRoots = {
+    fullfile(rootDir, 'models', 'urdf')
+    fullfile(rootDir, 'urdf')
+    };
+
+candidates = [];
+searchedRoots = {};
+for i = 1:numel(urdfRoots)
+    urdfRoot = urdfRoots{i};
+    searchedRoots{end+1} = urdfRoot; %#ok<AGROW>
+    rootCandidates = dir(fullfile(urdfRoot, '*', 'urdf', '*.urdf'));
+    candidates = [candidates; rootCandidates]; %#ok<AGROW>
+end
 
 if isempty(candidates)
     error('run_scene2_urdf_kinematics_visualization:MissingScene2Urdf', ...
-        'No SolidWorks URDF was found under: %s', urdfRoot);
+        'No SolidWorks URDF was found under:\n  %s', ...
+        strjoin(searchedRoots, sprintf('\n  ')));
 end
 
 [~, newestIndex] = max([candidates.datenum]);

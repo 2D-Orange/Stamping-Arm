@@ -19,7 +19,7 @@ Model Z: vertical upward
 
 The simplified FK/IK model uses this DH-aligned convention. The default modeled
 visualization now imports the newest SolidWorks package under
-`scene2/urdf/*/urdf/*.urdf` and creates a MATLAB-friendly
+`models/urdf/*/urdf/*.urdf` and creates a MATLAB-friendly
 `scene2_solidworks_import.urdf` copy beside the exported meshes.
 
 Geometry parameters:
@@ -36,7 +36,7 @@ Geometry parameters:
 Run in MATLAB:
 
 ```matlab
-cd('C:\Users\2D_Orange\Desktop\qrs3\stamp_arm 6.3\scene2')
+cd('C:\path\to\jiqirenbig')   % replace with the project root
 codeDir = dir('01_*');
 addpath(fullfile(pwd, codeDir(1).name))
 run_scene2_pipeline
@@ -111,6 +111,6 @@ directions. `joint_4` is the dependent wrist-leveling joint that keeps
 Legacy/custom DH URDF tools are still available as separate utilities:
 `run_scene2_urdf_joint_authoring` and `run_regenerate_scene2_urdf`. They edit
 and regenerate the older `exported/stamp_arm.urdf` path, not the default
-SolidWorks package under `scene2/urdf`.
+SolidWorks package under `models/urdf`.
 
 See `docs/scene2_nonstandard_dh_frames.md` for the exact joint-frame standard.
