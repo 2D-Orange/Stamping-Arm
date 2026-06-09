@@ -24,8 +24,9 @@ params = data.params;
 targets = data.targets;
 taskName = data.taskName;
 
-videoFile = fullfile(videoDir, 'scene2_rrrp_kinematics.avi');
-snapshotFiles = render_animation(traj, params, targets, taskName, videoFile, resultDir);
+videoBaseFile = fullfile(videoDir, 'scene2_rrrp_kinematics');
+[snapshotFiles, videoFile] = render_animation(traj, params, targets, ...
+    taskName, videoBaseFile, resultDir);
 
 fprintf('Saved scene2 primitive RRRP animation to: %s\n', videoFile);
 fprintf('Saved snapshots:\n');
@@ -46,8 +47,9 @@ names = sort({items.name});
 outputDir = fullfile(rootDir, names{1});
 end
 
-function snapshotFiles = render_animation(traj, params, targets, taskName, videoFile, resultDir)
-videoFps = 15;
+function [snapshotFiles, videoFile] = render_animation(traj, params, targets, ...
+    taskName, videoBaseFile, resultDir)
+videoFps = 30;
 frameStride = 5;
 frameIdx = 1:frameStride:size(traj.Q, 1);
 if frameIdx(end) ~= size(traj.Q, 1)
@@ -58,7 +60,7 @@ fig = figure('Visible', 'off', 'Name', 'scene2 primitive RRRP kinematics', ...
     'Position', [100 100 1280 900], 'Color', 'white');
 ax = axes('Parent', fig);
 
-video = VideoWriter(videoFile, 'Motion JPEG AVI');
+[video, videoFile] = create_video_writer(videoBaseFile);
 video.FrameRate = videoFps;
 open(video);
 
@@ -94,6 +96,20 @@ end
 
 close(video);
 close(fig);
+end
+
+function [video, videoFile] = create_video_writer(videoBaseFile)
+try
+    videoFile = [videoBaseFile, '.mp4'];
+    video = VideoWriter(videoFile, 'MPEG-4');
+catch
+    videoFile = [videoBaseFile, '.avi'];
+    video = VideoWriter(videoFile, 'Motion JPEG AVI');
+end
+
+if isprop(video, 'Quality')
+    video.Quality = 95;
+end
 end
 
 function draw_scene(ax, kin, traj, stampPath, targets, taskName, params, k)

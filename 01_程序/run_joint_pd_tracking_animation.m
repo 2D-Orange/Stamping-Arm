@@ -58,7 +58,7 @@ desiredStampPath = data.desiredStampPath;
 actualStampPath = data.actualStampPath;
 stampError = data.stampError;
 
-videoFps = 15;
+videoFps = 30;
 frameStride = 5;
 frameIdx = 1:frameStride:size(sim.Q, 1);
 if frameIdx(end) ~= size(sim.Q, 1)
@@ -69,13 +69,7 @@ fig = figure('Visible', 'off', 'Name', 'scene2 joint PD tracking', ...
     'Position', [100 100 1280 900], 'Color', 'white');
 ax = axes('Parent', fig);
 
-try
-    videoFile = [videoBaseFile, '.mp4'];
-    video = VideoWriter(videoFile, 'MPEG-4');
-catch
-    videoFile = [videoBaseFile, '.avi'];
-    video = VideoWriter(videoFile, 'Motion JPEG AVI');
-end
+[video, videoFile] = create_video_writer(videoBaseFile);
 video.FrameRate = videoFps;
 open(video);
 
@@ -107,6 +101,20 @@ end
 
 close(video);
 close(fig);
+end
+
+function [video, videoFile] = create_video_writer(videoBaseFile)
+try
+    videoFile = [videoBaseFile, '.mp4'];
+    video = VideoWriter(videoFile, 'MPEG-4');
+catch
+    videoFile = [videoBaseFile, '.avi'];
+    video = VideoWriter(videoFile, 'Motion JPEG AVI');
+end
+
+if isprop(video, 'Quality')
+    video.Quality = 95;
+end
 end
 
 function draw_scene(ax, refKin, actualKin, data, k)

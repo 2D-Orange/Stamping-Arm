@@ -2,8 +2,7 @@
 <!-- This URDF was automatically created by SolidWorks to URDF Exporter! Originally created by Stephen Brawner (brawner@gmail.com) 
      Commit Version: 1.6.0-4-g7f85cfe  Build Version: 1.6.7995.38578
      For more information, please see http://wiki.ros.org/sw_urdf_exporter -->
-<robot
-  name="装配体1.SLDASM">
+<robot name="scene2_solidworks_pd_tracking">
   <link
     name="base_link">
     <inertial>
@@ -26,12 +25,10 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://装配体1.SLDASM/meshes/base_link.STL" />
+          filename="meshes/base_link.STL" />
       </geometry>
-      <material
-        name="">
-        <color
-          rgba="1 1 1 1" />
+      <material name="base_link_pd_material">
+        <color rgba="0.88 0.88 0.84 1.0" />
       </material>
     </visual>
     <collision>
@@ -40,7 +37,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://装配体1.SLDASM/meshes/base_link.STL" />
+          filename="meshes/base_link.STL" />
       </geometry>
     </collision>
   </link>
@@ -66,12 +63,10 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://装配体1.SLDASM/meshes/link_1.STL" />
+          filename="meshes/link_1.STL" />
       </geometry>
-      <material
-        name="">
-        <color
-          rgba="1 1 1 1" />
+      <material name="link_1_pd_material">
+        <color rgba="0.86 0.24 0.18 1.0" />
       </material>
     </visual>
     <collision>
@@ -80,7 +75,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://装配体1.SLDASM/meshes/link_1.STL" />
+          filename="meshes/link_1.STL" />
       </geometry>
     </collision>
   </link>
@@ -124,12 +119,10 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://装配体1.SLDASM/meshes/link_2.STL" />
+          filename="meshes/link_2.STL" />
       </geometry>
-      <material
-        name="">
-        <color
-          rgba="1 1 1 1" />
+      <material name="link_2_pd_material">
+        <color rgba="0.86 0.24 0.18 1.0" />
       </material>
     </visual>
     <collision>
@@ -138,7 +131,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://装配体1.SLDASM/meshes/link_2.STL" />
+          filename="meshes/link_2.STL" />
       </geometry>
     </collision>
   </link>
@@ -155,8 +148,8 @@
     <axis
       xyz="0 0 -1" />
     <limit
-      lower="0"
-      upper="1.5708"
+      lower="-3.14159265358979"
+      upper="3.14159265358979"
       effort="20"
       velocity="2" />
   </joint>
@@ -182,12 +175,10 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://装配体1.SLDASM/meshes/link_3.STL" />
+          filename="meshes/link_3.STL" />
       </geometry>
-      <material
-        name="">
-        <color
-          rgba="1 1 1 1" />
+      <material name="link_3_pd_material">
+        <color rgba="0.86 0.24 0.18 1.0" />
       </material>
     </visual>
     <collision>
@@ -196,7 +187,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://装配体1.SLDASM/meshes/link_3.STL" />
+          filename="meshes/link_3.STL" />
       </geometry>
     </collision>
   </link>
@@ -213,8 +204,8 @@
     <axis
       xyz="0 0 -1" />
     <limit
-      lower="-1.5708"
-      upper="1.5708"
+      lower="-3.14159265358979"
+      upper="3.14159265358979"
       effort="20"
       velocity="2" />
   </joint>
@@ -240,12 +231,10 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://装配体1.SLDASM/meshes/link_4.STL" />
+          filename="meshes/link_4.STL" />
       </geometry>
-      <material
-        name="">
-        <color
-          rgba="1 1 1 1" />
+      <material name="link_4_pd_material">
+        <color rgba="0.86 0.24 0.18 1.0" />
       </material>
     </visual>
     <collision>
@@ -254,7 +243,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://装配体1.SLDASM/meshes/link_4.STL" />
+          filename="meshes/link_4.STL" />
       </geometry>
     </collision>
   </link>
@@ -271,8 +260,8 @@
     <axis
       xyz="0 0 -1" />
     <limit
-      lower="-1.5708"
-      upper="1.5708"
+      lower="-3.14159265358979"
+      upper="3.14159265358979"
       effort="20"
       velocity="2" />
   </joint>
@@ -298,12 +287,10 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://装配体1.SLDASM/meshes/link_5.STL" />
+          filename="meshes/link_5.STL" />
       </geometry>
-      <material
-        name="">
-        <color
-          rgba="1 1 1 1" />
+      <material name="link_5_pd_material">
+        <color rgba="0.86 0.24 0.18 1.0" />
       </material>
     </visual>
     <collision>
@@ -312,7 +299,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://装配体1.SLDASM/meshes/link_5.STL" />
+          filename="meshes/link_5.STL" />
       </geometry>
     </collision>
   </link>
@@ -320,7 +307,7 @@
     name="joint_5"
     type="prismatic">
     <origin
-      xyz="0.11 -0.02 0"
+      xyz="0.11 -0.01 0.0"
       rpy="1.5708 0 0" />
     <parent
       link="link_4" />
