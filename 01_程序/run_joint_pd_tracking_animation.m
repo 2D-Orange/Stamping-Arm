@@ -5,10 +5,9 @@
 
 clear; clc; close all;
 
-codeDir = fileparts(mfilename('fullpath'));
-rootDir = fileparts(codeDir);
-resultDir = get_output_dir(rootDir, '02_', '02_results');
-videoDir = get_output_dir(rootDir, '03_', '03_video');
+paths = stamp_project_paths();
+resultDir = paths.resultDir;
+videoDir = paths.videoDir;
 simFile = fullfile(resultDir, 'joint_pd_tracking_simulation.mat');
 
 if ~exist(simFile, 'file')
@@ -32,19 +31,6 @@ fprintf('Saved joint-space PD tracking video to: %s\n', videoFile);
 fprintf('Saved snapshots:\n');
 for i = 1:numel(snapshotFiles)
     fprintf('  %s\n', snapshotFiles{i});
-end
-
-function outputDir = get_output_dir(rootDir, prefix, fallbackName)
-items = dir(fullfile(rootDir, [prefix, '*']));
-items = items([items.isdir]);
-
-if isempty(items)
-    outputDir = fullfile(rootDir, fallbackName);
-    return;
-end
-
-names = sort({items.name});
-outputDir = fullfile(rootDir, names{1});
 end
 
 function [snapshotFiles, videoFile] = render_pd_tracking_animation(data, ...
@@ -101,20 +87,6 @@ end
 
 close(video);
 close(fig);
-end
-
-function [video, videoFile] = create_video_writer(videoBaseFile)
-try
-    videoFile = [videoBaseFile, '.mp4'];
-    video = VideoWriter(videoFile, 'MPEG-4');
-catch
-    videoFile = [videoBaseFile, '.avi'];
-    video = VideoWriter(videoFile, 'Motion JPEG AVI');
-end
-
-if isprop(video, 'Quality')
-    video.Quality = 95;
-end
 end
 
 function draw_scene(ax, refKin, actualKin, data, k)

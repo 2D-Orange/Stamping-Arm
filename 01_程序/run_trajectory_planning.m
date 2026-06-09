@@ -95,25 +95,11 @@ end
 end
 
 function resultDir = get_result_dir()
-codeDir = fileparts(mfilename('fullpath'));
-rootDir = fileparts(codeDir);
-resultDir = get_output_dir(rootDir, '02_', '02_results');
+paths = stamp_project_paths();
+resultDir = paths.resultDir;
 if ~exist(resultDir, 'dir')
     mkdir(resultDir);
 end
-end
-
-function outputDir = get_output_dir(rootDir, prefix, fallbackName)
-items = dir(fullfile(rootDir, [prefix, '*']));
-items = items([items.isdir]);
-
-if isempty(items)
-    outputDir = fullfile(rootDir, fallbackName);
-    return;
-end
-
-names = sort({items.name});
-outputDir = fullfile(rootDir, names{1});
 end
 
 function plot_trajectory_results(traj, stampPath, Q_points, resultDir)

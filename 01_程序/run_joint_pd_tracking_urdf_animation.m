@@ -5,10 +5,10 @@
 
 clear; clc; close all;
 
-codeDir = fileparts(mfilename('fullpath'));
-rootDir = fileparts(codeDir);
-resultDir = get_output_dir(rootDir, '02_', '02_results');
-videoDir = get_output_dir(rootDir, '03_', '03_video');
+paths = stamp_project_paths();
+rootDir = paths.rootDir;
+resultDir = paths.resultDir;
+videoDir = paths.videoDir;
 simFile = fullfile(resultDir, 'joint_pd_tracking_simulation.mat');
 
 if ~exist(simFile, 'file')
@@ -53,58 +53,10 @@ for i = 1:numel(snapshotFiles)
     fprintf('  %s\n', snapshotFiles{i});
 end
 
-function outputDir = get_output_dir(rootDir, prefix, fallbackName)
-items = dir(fullfile(rootDir, [prefix, '*']));
-items = items([items.isdir]);
-
-if isempty(items)
-    outputDir = fullfile(rootDir, fallbackName);
-    return;
-end
-
-names = sort({items.name});
-outputDir = fullfile(rootDir, names{1});
-end
-
 function [importUrdfFile, sourceUrdfFile, packageDir] = prepare_solidworks_urdf(rootDir)
-urdfRoots = {
-    fullfile(rootDir, 'models', 'urdf')
-    fullfile(rootDir, 'urdf')
-    };
-
-candidates = [];
-searchedRoots = {};
-for i = 1:numel(urdfRoots)
-    urdfRoot = urdfRoots{i};
-    searchedRoots{end+1} = urdfRoot; %#ok<AGROW>
-    rootCandidates = dir(fullfile(urdfRoot, '*', 'urdf', '*.urdf'));
-    candidates = [candidates; rootCandidates]; %#ok<AGROW>
-end
-
-if isempty(candidates)
-    error('run_joint_pd_tracking_urdf_animation:MissingScene2Urdf', ...
-        'No SolidWorks URDF was found under:\n  %s', ...
-        strjoin(searchedRoots, sprintf('\n  ')));
-end
-
-[~, newestIndex] = max([candidates.datenum]);
-sourceUrdfFile = fullfile(candidates(newestIndex).folder, candidates(newestIndex).name);
-packageDir = fileparts(fileparts(sourceUrdfFile));
-meshDir = fullfile(packageDir, 'meshes');
-
-if ~exist(meshDir, 'dir')
-    error('run_joint_pd_tracking_urdf_animation:MissingMeshDir', ...
-        'Mesh directory not found beside the SolidWorks URDF package: %s', meshDir);
-end
-
-requiredMeshes = {'base_link.STL', 'link_1.STL', 'link_2.STL', ...
-    'link_3.STL', 'link_4.STL', 'link_5.STL'};
-for i = 1:numel(requiredMeshes)
-    if ~exist(fullfile(meshDir, requiredMeshes{i}), 'file')
-        error('run_joint_pd_tracking_urdf_animation:MissingMesh', ...
-            'Required mesh not found: %s', fullfile(meshDir, requiredMeshes{i}));
-    end
-end
+urdfInfo = find_scene2_urdf_package(rootDir);
+sourceUrdfFile = urdfInfo.sourceUrdfFile;
+packageDir = urdfInfo.packageDir;
 
 importUrdfFile = fullfile(packageDir, 'scene2_solidworks_pd_tracking.urdf');
 urdfText = fileread(sourceUrdfFile);
@@ -324,20 +276,6 @@ end
 
 close(video);
 close(fig);
-end
-
-function [video, videoFile] = create_video_writer(videoBaseFile)
-try
-    videoFile = [videoBaseFile, '.mp4'];
-    video = VideoWriter(videoFile, 'MPEG-4');
-catch
-    videoFile = [videoBaseFile, '.avi'];
-    video = VideoWriter(videoFile, 'Motion JPEG AVI');
-end
-
-if isprop(video, 'Quality')
-    video.Quality = 95;
-end
 end
 
 function plot_pd_paths(ax, data, k)

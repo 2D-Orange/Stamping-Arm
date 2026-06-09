@@ -21,6 +21,19 @@ Thumbs.db
 tmp/
 temp/
 
-# Local planning/reference notes
-docs/
+# SolidWorks lock files
+~$*
+models/**/~$*
+
+# Generated MATLAB outputs
+02_仿真结果/*
+!02_仿真结果/.gitkeep
+03_视频/*
+!03_视频/.gitkeep
+
+# Generated MATLAB-friendly URDF copies
+models/urdf/*/scene2_solidworks_import.urdf
+models/urdf/*/scene2_solidworks_pd_tracking.urdf
+
+# Archived previous project copies
 old/

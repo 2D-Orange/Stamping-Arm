@@ -82,9 +82,8 @@ if maxError > 1e-9
         'Forward/inverse kinematics verification failed.');
 end
 
-codeDir = fileparts(mfilename('fullpath'));
-rootDir = fileparts(codeDir);
-resultDir = get_output_dir(rootDir, '02_', '02_results');
+paths = stamp_project_paths();
+resultDir = paths.resultDir;
 if ~exist(resultDir, 'dir')
     mkdir(resultDir);
 end
@@ -92,16 +91,3 @@ end
 outCsv = fullfile(resultDir, 'kinematics_solution.csv');
 writetable(results, outCsv);
 fprintf('Saved result table to: %s\n', outCsv);
-
-function outputDir = get_output_dir(rootDir, prefix, fallbackName)
-items = dir(fullfile(rootDir, [prefix, '*']));
-items = items([items.isdir]);
-
-if isempty(items)
-    outputDir = fullfile(rootDir, fallbackName);
-    return;
-end
-
-names = sort({items.name});
-outputDir = fullfile(rootDir, names{1});
-end
