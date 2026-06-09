@@ -12,7 +12,7 @@ nTask = size(targets, 1);
 Q_points = zeros(nTask, 4);
 
 for i = 1:nTask
-    Q_points(i,:) = inverse_kinematics_stamp(targets(i,:), params, 'up');
+    Q_points(i,:) = inverse_kinematics_stamp(targets(i,:), params, params.elbowMode);
 end
 
 traj = plan_joint_trajectory(Q_points, params);
@@ -97,10 +97,23 @@ end
 function resultDir = get_result_dir()
 codeDir = fileparts(mfilename('fullpath'));
 rootDir = fileparts(codeDir);
-resultDir = fullfile(rootDir, '02_仿真结果');
+resultDir = get_output_dir(rootDir, '02_', '02_results');
 if ~exist(resultDir, 'dir')
     mkdir(resultDir);
 end
+end
+
+function outputDir = get_output_dir(rootDir, prefix, fallbackName)
+items = dir(fullfile(rootDir, [prefix, '*']));
+items = items([items.isdir]);
+
+if isempty(items)
+    outputDir = fullfile(rootDir, fallbackName);
+    return;
+end
+
+names = sort({items.name});
+outputDir = fullfile(rootDir, names{1});
 end
 
 function plot_trajectory_results(traj, stampPath, Q_points, resultDir)

@@ -1,34 +1,45 @@
 function params = stamp_robot_params()
-%STAMP_ROBOT_PARAMS Geometry parameters for the desktop stamping arm.
+%STAMP_ROBOT_PARAMS Geometry parameters for scene2 RRRP stamping arm.
 % Units: meter and radian.
 
-params.L1 = 0.105;       % Base height.
+params.L1 = 0.15;        % Base height.
 params.L2 = 0.25;        % Upper arm length.
 params.L3 = 0.30;        % Forearm length.
-params.L_axis = 0.025;   % Horizontal offset from wrist joint axis to stamp slider axis.
-params.H_stamp = 0.015;  % Stamp face height offset when q4 = 0.
+params.L_axis = 0.11;    % Horizontal offset from wrist joint axis to stamp axis.
+params.H_stamp = 0.01;   % Stamp face height offset when q4 = 0.
 
 params.q4_min = 0.0;
-params.q4_max = 0.07;
-params.q4_press = 0.07;
+params.q4_max = 0.12;
+params.q4_press = 0.06;
 
 % +1 means the stamp slider axis is radially outward from the wrist.
-% Use -1 if the actual assembly places it radially inward.
+% Use -1 if the actual scene2 assembly places it radially inward.
 params.axisSign = 1;
 
-params.safeStampZ = 0.08;
+params.safeStampZ = 0.12;
 params.tolerance = 1e-10;
+params.elbowMode = 'elbow_up';
 
 % Trajectory planning settings.
 % trajSegmentTime can be a scalar or a vector with one value per segment.
 params.trajSegmentTime = 2.0;
 params.trajDt = 0.02;
 
+% Joint-space PD tracking simulation settings.
+% Kp = pdNaturalFrequency.^2, Kd = 2*pdDampingRatio.*pdNaturalFrequency.
+% q1-q3 use radian units; q4 uses meter units.
+params.pdNaturalFrequency = [10, 10, 10, 14];
+params.pdDampingRatio = [1, 1, 1, 1];
+params.pdInitialPositionError = [0, 0, 0, 0];
+params.pdInitialVelocityError = [0, 0, 0, 0];
+params.pdMaxJointAcceleration = [30, 30, 30, 3];
+params.pdSettlingTime = 1.0;
+
 % Task points for inverse kinematics.
 % Format of each target row: [x, y, z, press]
 % z is the desired stamp working-face height.
 % press = 0 means q4_min, press = 1 means q4_press.
-% You may also put a direct q4 value in meters, such as 0.035.
+% You may also put a direct q4 value in meters, such as 0.060.
 % You can add, delete, or reorder rows here; keep taskNames the same length.
 params.taskNames = {
     'home'
@@ -42,13 +53,13 @@ params.taskNames = {
     };
 
 params.taskTargets = [
-    0.28,  0.00, 0.18, 0
-    0.30,  0.20, 0.08, 0
-    0.30,  0.20, 0.02, 1
-    0.30,  0.20, 0.08, 0
-    0.30, -0.20, 0.06, 0
-    0.30, -0.20, 0.00, 1
-    0.30, -0.20, 0.06, 0
-    0.28,  0.00, 0.18, 0
+    0.38,  0.00, 0.28, 0
+    0.38,  0.18, 0.08, 0
+    0.38,  0.18, 0.02, 0.06 % 0.12 1
+    0.38,  0.18, 0.08, 0
+    0.42, -0.18, 0.08, 0
+    0.42, -0.18, 0.02, 0.06
+    0.42, -0.18, 0.08, 0
+    0.38,  0.00, 0.28, 0
     ];
 end

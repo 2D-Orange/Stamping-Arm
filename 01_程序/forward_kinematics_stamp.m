@@ -7,6 +7,9 @@ function varargout = forward_kinematics_stamp(q, params)
 % q3: forearm pitch relative to upper arm, rad
 % q4: downward stamp extension, m
 %
+% scene2 uses the simple RRRP structure directly, without parallelogram
+% plate coupling.
+%
 % The stamp face is returned as p_stamp. This implementation uses a
 % non-standard DH-style homogeneous transform chain:
 %   T01 = Tz(L1) * Rz(q1)

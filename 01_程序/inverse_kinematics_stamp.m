@@ -8,8 +8,8 @@ function [q, info] = inverse_kinematics_stamp(target, params, elbowMode)
 %   other   -> use the value directly as q4, in meters
 %
 % elbowMode:
-%   'up'   -> positive q3 solution, default
-%   'down' -> negative q3 solution
+%   'up' / 'z_up'     -> solution with the elbow convex toward +Z, default
+%   'down' / 'z_down' -> solution with the lower elbow height
 
 if nargin < 2 || isempty(params)
     params = stamp_robot_params();
@@ -71,20 +71,21 @@ if abs(D_raw) > 1 + params.tolerance
 end
 
 D = min(max(D_raw, -1), 1);
-rootTerm = sqrt(max(0, 1 - D^2));
+rootTermAbs = sqrt(max(0, 1 - D^2));
 
-if strcmpi(elbowMode, 'down')
-    rootTerm = -rootTerm;
-elseif ~strcmpi(elbowMode, 'up')
+[candidateQ, candidateElbowZ] = solve_elbow_candidates(q1, q4, D, ...
+    rootTermAbs, zp, r_wrist, params);
+
+if any(strcmpi(elbowMode, {'up', 'z_up', 'elbow_up'}))
+    [~, selectedIndex] = max(candidateElbowZ);
+elseif any(strcmpi(elbowMode, {'down', 'z_down', 'elbow_down'}))
+    [~, selectedIndex] = min(candidateElbowZ);
+else
     error('inverse_kinematics_stamp:InvalidElbowMode', ...
-        'elbowMode must be ''up'' or ''down''.');
+        'elbowMode must be ''up'', ''z_up'', ''down'', or ''z_down''.');
 end
 
-q3 = atan2(rootTerm, D);
-q2 = atan2(zp, r_wrist) - ...
-    atan2(params.L3 * sin(q3), params.L2 + params.L3 * cos(q3));
-
-q = [q1, q2, q3, q4];
+q = candidateQ(selectedIndex,:);
 
 kin = forward_kinematics_stamp(q, params);
 positionError = kin.p_stamp - [x; y; z];
@@ -96,7 +97,26 @@ info.r_stamp = r_stamp;
 info.r_wrist = r_wrist;
 info.z_wrist = z_wrist;
 info.D = D_raw;
+info.elbowZ = kin.p_elbow(3);
+info.candidateElbowZ = candidateElbowZ;
 info.forwardPosition = kin.p_stamp;
 info.positionError = positionError;
 info.positionErrorNorm = norm(positionError);
+end
+
+function [candidateQ, candidateElbowZ] = solve_elbow_candidates(q1, q4, D, ...
+    rootTermAbs, zp, r_wrist, params)
+candidateRoots = [rootTermAbs, -rootTermAbs];
+candidateQ = zeros(2, 4);
+candidateElbowZ = zeros(2, 1);
+
+for i = 1:2
+    q3 = atan2(candidateRoots(i), D);
+    q2 = atan2(zp, r_wrist) - ...
+        atan2(params.L3 * sin(q3), params.L2 + params.L3 * cos(q3));
+
+    candidateQ(i,:) = [q1, q2, q3, q4];
+    kin = forward_kinematics_stamp(candidateQ(i,:), params);
+    candidateElbowZ(i) = kin.p_elbow(3);
+end
 end
