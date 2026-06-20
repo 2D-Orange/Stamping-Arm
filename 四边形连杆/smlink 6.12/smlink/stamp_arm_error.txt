@@ -1,4 +1,0 @@
-Constrained Instances: 'table-1', 'table-1', 'base-1'
-Constraint Name: ¿í¶È1
-Error Details: Constraint is not supported. The constraint has been ignored.
----------------------------------------------------------------------------------
